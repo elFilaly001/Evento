@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class EventController extends Controller
      */
     public function index()
     {
-        return view("Back-office.tables");
+        $events = Event::orderBy("created_at", "desc")->paginate(10);
+        $categories = Category::orderBy("created_at", "desc")->paginate(10);
+        return view("Back-office.tables", compact(["events", "categories"]));
     }
 
     /**
@@ -58,7 +61,8 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        $event = Event::find($event->id);
+        return view('Back-office.eventEdit', compact('event'));
     }
 
     /**
@@ -66,7 +70,14 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+        $event = Event::find($event->id);
+        $event->name = $request->name;
+        $event->description = $request->description;
+        $event->date_start = $request->date_start;
+        $event->location = $request->location;
+        $event->category_id = $request->category_id;
+        $event->user_id = $request->user_id;
+        $event->update();
     }
 
     /**

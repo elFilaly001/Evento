@@ -30,3 +30,5 @@ Route::get('/logout', [UserController::class, 'destroy']);
 
 Route::get('/dashboard', [EventController::class, 'index'])->name('Admin_index');
 Route::post('/AddEvent', [EventController::class, 'store'])->name('AddEvent');
+Route::get('/EditEvent/{event}', [EventController::class, 'edit'])->name('editEvent');
+Route::put('/UpdateEvent/{event}', [EventController::class, 'update'])->name('updateEvent');

@@ -1,4 +1,4 @@
-@dd($categories)
+{{-- @dump($event) --}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,7 +20,6 @@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
-
         <!-- Sidebar -->
         @include('Componants.sideBarOrg')
         <!-- Content Wrapper -->
@@ -120,125 +119,64 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">   
-
-                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Add Event
-                      </button>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Image</th>
-                                            <th>Title</th>
-                                            <th>Desctiption</th>
-                                            <th>Category</th>
-                                            <th>Date</th>
-                                            <th>validation</th>
-                                            <th>status</th>
-                                            <th>Action</th>   
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($events as $event)
-                                        <tr>
-                                            <th><img src="upload/events/imgs/{{$event->image}}" alt="" style="width: 50px;border-radius: 50%;height:50px"></th>
-                                            <th>{{$event->title}}</th>
-                                            <th>{{$event->description}}</th>
-                                            <th></th>
-                                            <th>{{$event->date}}</th>
-                                            <th>{{$event->validation}}</th>
-                                            <th>{{$event->status}}</th>
-                                            <th>
-                                                <a href="{{route('editEvent' , $event->id)}}" class="btn btn-primary">Edit</a>
-                                                <a href="" class="btn btn-danger">Delete</a>
-                                            </th>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Image</th>
-                                            <th>Title</th>
-                                            <th>Desctiption</th>
-                                            <th>Category</th>
-                                            <th>Date</th>
-                                            <th>validation</th>
-                                            <th>status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                <div class="container-fluid">
+                    <div class="modal-body">
+                        <form action="{{route('UpdateEvent')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                              <label for="exampleInputEmail1" class="form-label">Image</label>
+                              <input type="file" class="form-control" name="image">
                             </div>
-                        </div>
+                            <div class="mb-3">
+                              <label for="exampleInputPassword1" class="form-label">Title</label>
+                              <input type="text" class="form-control" id="exampleInputPassword1" name="title" value="{{$event->title}}"  >
+                            </div>
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="description" style="height: 100px" >{{$event->description}}</textarea>
+                                <label for="floatingTextarea2">Description</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">location</label>
+                                <input type="text" class="form-control" id="exampleInputPassword1" name="location" value="{{$event->location}}">
+                              </div>
+                              <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">date</label>
+                                <input type="datetime-local" class="form-control" id="exampleInputPassword1" name="date" value="{{$event->date}}">
+                              </div>`
+                            <div class="mb-3">
+                              <label for="exampleInputPassword1" class="form-label">Places</label>
+                              <input type="number" class="form-control" id="exampleInputPassword1" name="num_places" value="{{$event->num_places}}">
+                            </div>
+                            <div class="d-flex gap-3 justify-content-center">
+                                <div class="form-check ">
+                                    <input class="form-check-input" type="radio" name="validation" id="flexRadioDefault1" value="Manuel" 
+                                    @if ($event->validation == "Manuel")
+                                    checked
+                                    @endif>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Manuel
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="validation" id="flexRadioDefault2" value="automatic" 
+                                    @if ($event->validation == "automatic")
+                                    checked
+                                    @endif>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Automatique
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                          </form>
                     </div>
-
-                    <!-- Button trigger modal -->
+                </div>   
+                    
+                <!-- Button trigger modal -->
 
   
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Event</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="{{route('AddEvent')}}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Image</label>
-                  <input type="file" class="form-control" name="image">
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Title</label>
-                  <input type="text" class="form-control" id="exampleInputPassword1" name="title">
-                </div>
-                <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="description" style="height: 100px"></textarea>
-                    <label for="floatingTextarea2">Description</label>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">location</label>
-                    <input type="text" class="form-control" id="exampleInputPassword1" name="location">
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">date</label>
-                    <input type="datetime-local" class="form-control" id="exampleInputPassword1" name="date">
-                  </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Places</label>
-                  <input type="number" class="form-control" id="exampleInputPassword1" name="num_places">
-                </div>
-                <div class="d-flex gap-3 justify-content-center">
-                    <div class="form-check ">
-                        <input class="form-check-input" type="radio" name="validation" id="flexRadioDefault1" value="Manuel">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            Manuel
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="validation" id="flexRadioDefault2" value="automatic" checked>
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            Automatique
-                        </label>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-        </div>
-      </div>
-    </div>
-  </div>
-                </div>
+              </div>
                 <!-- /.container-fluid -->
 
                 
@@ -247,19 +185,19 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            {{-- <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Your Website 2020</span>
                     </div>
                 </div>
-            </footer>
+            </footer> --}}
             <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
-    </div>
+    
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
