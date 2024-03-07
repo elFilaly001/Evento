@@ -30,7 +30,7 @@ class UserController extends Controller
             $request->session()->put('user_id', $user->id);
             $request->session()->put('user_name', $user->name);
             $request->session()->put('user_role', $user->role);
-            return redirect(route('home'))->with('success', 'Login successful');
+            return redirect()->route('home')->with('success', 'Login successful');
         } else {
             return back()->withErrors(['email' => 'the email or password could not be verified']);
         }

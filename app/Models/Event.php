@@ -9,10 +9,10 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["title", "description", "location", "date", "num_places", "validation", "status", "image",];
+    protected $fillable = ["title", "description", "location", "date", "num_places", "validation",  "status", "image", "category_id", "user_id"];
 
 
-    public function categorie()
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }

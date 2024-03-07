@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -18,12 +20,22 @@ return new class extends Migration
             $table->string('location');
             $table->dateTime('date');
             $table->integer('num_places');
-            $table->string('validation');
-            $table->string('status');
             $table->string('image');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('user_id');
+            $table->enum('validation', ['automatic', 'Manuel'])->default('automatic');
+            $table->enum('status', ['approved', 'rejected', 'pending'])->default('pending');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
+
+        // Add the following lines to explicitly set the storage engine to InnoDB
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::statement('ALTER TABLE events ENGINE = InnoDB');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
+
 
     /**
      * Reverse the migrations.

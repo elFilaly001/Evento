@@ -1,4 +1,3 @@
-{{-- @dump($event) --}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +19,7 @@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
+
         <!-- Sidebar -->
         @include('Componants.sideBarOrg')
         <!-- Content Wrapper -->
@@ -119,73 +119,106 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <div class="modal-body">
-                        <form action="{{route('UpdateEvent',$event->id)}}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="mb-3">
-                              <label for="exampleInputEmail1" class="form-label">Image</label>
-                              <input type="file" class="form-control" name="image">
-                            </div>
-                            <div class="mb-3">
-                              <label for="exampleInputPassword1" class="form-label">Title</label>
-                              <input type="text" class="form-control" id="exampleInputPassword1" name="title" value="{{$event->title}}"  >
-                            </div>
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="description" style="height: 100px" >{{$event->description}}</textarea>
-                                <label for="floatingTextarea2">Description</label>
-                            </div>
-                            <div class="mb-3">
-                                <label for="floatingTextarea2">category</label>
-                                <select class="form-select" name="category" aria-label="Default select example">
-                                    <option value="">categories...</option>
-                                    @foreach($categories as $category)
-                                    <option value="{{$category->id}}" @selected($category->id == $event->category_id) >{{$category->name}} </option>
-                                    @endforeach
-                                  </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">location</label>
-                                <input type="text" class="form-control" id="exampleInputPassword1" name="location" value="{{$event->location}}">
-                              </div>
-                              <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">date</label>
-                                <input type="datetime-local" class="form-control" id="exampleInputPassword1" name="date" value="{{$event->date}}">
-                              </div>`
-                            <div class="mb-3">
-                              <label for="exampleInputPassword1" class="form-label">Places</label>
-                              <input type="number" class="form-control" id="exampleInputPassword1" name="num_places" value="{{$event->num_places}}">
-                            </div>
-                            <div class="d-flex gap-3 justify-content-center">
-                                <div class="form-check ">
-                                    <input class="form-check-input" type="radio" name="validation" id="flexRadioDefault1" value="Manuel" 
-                                    @if ($event->validation == "Manuel")
-                                    checked
-                                    @endif>
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Manuel
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="validation" id="flexRadioDefault2" value="automatic" 
-                                    @if ($event->validation == "automatic")
-                                    checked
-                                    @endif>
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        Automatique
-                                    </label>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                          </form>
-                    </div>
-                </div>   
+                <div class="container-fluid">   
+
+                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Add Category
+                      </button>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Name</th>
+                                            <th>Action</th>   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($categories as $cat)
+                                        <tr>
+                                            <th>{{$cat->id}}</th>
+                                            <th>{{$cat->name}}</th>
+                                            <th class="d-flex gap-2 pb-4">
+                                                <button type="button" onclick="editCat(event)" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate">
+                                                    Edit
+                                                  </button>
+                                                <form action="{{route('Category_Delete' , $cat->id)}}" method="post">
+                                                    @csrf
+                                                    @method("DELETE")
+                                                    <button type="submit" class="btn btn-danger">Delete</a>
+                                                </form>
+                                            </th>
+                                        </tr>
+                                        @endforeach
                     
-                <!-- Button trigger modal -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                {{$categories->links()}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Button trigger modal -->
 
   
-              </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="{{route('Category_Store')}}" method="POST">
+                @csrf
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">name</label>
+                  <input type="text" class="form-control" id="exampleInputPassword1" name="name">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModalUpdate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="{{route('Category_Update')}}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="mb-3">
+                  <input type="hidden" id="id_inp" name="id">
+                  <label for="exampleInputPassword1" class="form-label" >name</label>
+                  <input type="text" class="form-control" id="name_inp" name="name">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
                 <!-- /.container-fluid -->
 
                 
@@ -194,19 +227,19 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            {{-- <footer class="sticky-footer bg-white">
+            <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Your Website 2020</span>
                     </div>
                 </div>
-            </footer> --}}
+            </footer>
             <!-- End of Footer -->
 
         </div>
         <!-- End of Content Wrapper -->
 
-    
+    </div>
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
@@ -235,6 +268,22 @@
     </div>
 
     @include('Componants.scripts')
+
+    <script>
+        function editCat(e){
+            let tr  = e.target.closest("tr");
+            let th_id = tr.querySelectorAll("th")[0];
+            let th_name = tr.querySelectorAll("th")[1];
+
+            let inp_id= document.getElementById("id_inp")
+            let inp_name= document.getElementById("name_inp")
+
+            console.log(th_id.innerText);
+            inp_id.value = th_id.innerText;
+            inp_name.value = th_name.innerText ; 
+        }
+
+    </script>
 
 </body>
 

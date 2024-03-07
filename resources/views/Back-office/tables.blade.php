@@ -1,4 +1,3 @@
-@dd($categories)
 <!DOCTYPE html>
 <html lang="en">
 
@@ -152,13 +151,17 @@
                                             <th><img src="upload/events/imgs/{{$event->image}}" alt="" style="width: 50px;border-radius: 50%;height:50px"></th>
                                             <th>{{$event->title}}</th>
                                             <th>{{$event->description}}</th>
-                                            <th></th>
+                                            <th>{{$event->category->name}}</th>
                                             <th>{{$event->date}}</th>
                                             <th>{{$event->validation}}</th>
                                             <th>{{$event->status}}</th>
-                                            <th>
+                                            <th class="d-flex gap-2 pb-4">
                                                 <a href="{{route('editEvent' , $event->id)}}" class="btn btn-primary">Edit</a>
-                                                <a href="" class="btn btn-danger">Delete</a>
+                                                <form action="{{route('DeleteEvent' , $event->id)}}" method="post">
+                                                    @csrf
+                                                    @method("DELETE")
+                                                    <button type="submit" class="btn btn-danger">Delete</a>
+                                                </form>
                                             </th>
                                         </tr>
                                         @endforeach
@@ -202,9 +205,18 @@
                   <label for="exampleInputPassword1" class="form-label">Title</label>
                   <input type="text" class="form-control" id="exampleInputPassword1" name="title">
                 </div>
-                <div class="form-floating">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="description" style="height: 100px"></textarea>
+                <div class="mb-3">
                     <label for="floatingTextarea2">Description</label>
+                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" name="description" style="height: 100px"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="floatingTextarea2">category</label>
+                    <select class="form-select" name="category_id" aria-label="Default select example">
+                        <option value="">categories...</option>
+                        @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                      </select>
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">location</label>

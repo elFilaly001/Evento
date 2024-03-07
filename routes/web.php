@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get("/", [EventController::class, "index"])->name("home");
+Route::get("/", [EventController::class, "Home_index"])->name('home');
 
 
 // LOGIN
@@ -31,4 +32,12 @@ Route::get('/logout', [UserController::class, 'destroy']);
 Route::get('/dashboard', [EventController::class, 'index'])->name('Admin_index');
 Route::post('/AddEvent', [EventController::class, 'store'])->name('AddEvent');
 Route::get('/EditEvent/{event}', [EventController::class, 'edit'])->name('editEvent');
-Route::put('/UpdateEvent/{event}', [EventController::class, 'update'])->name('updateEvent');
+Route::put('/UpdateEvent/{event}', [EventController::class, 'update'])->name('UpdateEvent');
+Route::delete('/DeleteEvent/{event}', [EventController::class, 'destroy'])->name('DeleteEvent');
+
+
+Route::get('/Category', [CategoryController::class, 'index'])->name('Category_index');
+Route::post('/AddCategory', [CategoryController::class, 'store'])->name('Category_Store');
+Route::post('/EditCategory', [CategoryController::class, 'edit'])->name('Category_Edit');
+Route::put('/UpdateCategory', [CategoryController::class, 'Update'])->name('Category_Update');
+Route::delete('/DeleteCategory/{category}', [CategoryController::class, 'destroy'])->name('Category_Delete');

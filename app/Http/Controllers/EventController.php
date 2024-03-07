@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventRequest;
 use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request;
@@ -13,11 +14,15 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::orderBy("created_at", "desc")->paginate(10);
+        $events = Event::where("user_id", "=", session('user_id'))->orderBy("created_at", "desc")->paginate(10);
         $categories = Category::orderBy("created_at", "desc")->paginate(10);
         return view("Back-office.tables", compact(["events", "categories"]));
     }
 
+    public function Home_index()
+    {
+        return view("Front-Office.index");
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -29,7 +34,7 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EventRequest $request)
     {
         $inputs = $request->all();
         if ($request->hasFile("image")) {
@@ -37,11 +42,11 @@ class EventController extends Controller
             $filename = time() . "." . $file->getClientOriginalExtension();
             $inputs['image'] = $filename;
             if ($inputs['validation'] == 'automatic') {
-                $inputs['status'] = 'aproved';
+                $inputs['status'] = 'approved';
             } elseif ($inputs['validation'] == 'Manuel') {
                 $inputs['status'] = 'pending';
             }
-            // dd($inputs);
+            $inputs['user_id'] = session("user_id");
             Event::create($inputs);
             $file->move(public_path("/upload/events/imgs"), $filename);
             return redirect()->route('Admin_index')->with('success', 'Uploaded successfully');
@@ -62,22 +67,39 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $event = Event::find($event->id);
-        return view('Back-office.eventEdit', compact('event'));
+        $categories = Category::orderBy('created_at', 'desc')->paginate(10);
+        return view('Back-office.eventEdit', compact(["event", "categories"]));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Event $event)
+    public function update(EventRequest $request, Event $event)
     {
-        $event = Event::find($event->id);
-        $event->name = $request->name;
-        $event->description = $request->description;
-        $event->date_start = $request->date_start;
-        $event->location = $request->location;
-        $event->category_id = $request->category_id;
-        $event->user_id = $request->user_id;
-        $event->update();
+        // dd($request);
+        if ($request->hasFile('image')) {
+            $file = $request->file("image");
+            $filename = time() . "." . $file->getClientOriginalExtension();
+            $event['image'] = $filename;
+            $event = Event::find($event->id);
+            $event->title = $request->title;
+            $event->description = $request->description;
+            $event->date = $request->date;
+            $event->location = $request->location;
+            $event->category_id = $request->category;
+            $event->update();
+            $file->move(public_path("/upload/events/imgs"), $filename);
+            return redirect()->route("Admin_index", $event->id)->with("success", "updated succesfully");
+        } else {
+            $event = Event::find($event->id);
+            $event->title = $request->title;
+            $event->description = $request->description;
+            $event->date = $request->date;
+            $event->location = $request->location;
+            $event->category_id = $request->category;
+            $event->update();
+            return redirect()->route("Admin_index", $event->id)->with("success", "updated succesfully");
+        }
     }
 
     /**
@@ -85,6 +107,8 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event = Event::where('id', $event->id)->first();
+        $event->delete();
+        return redirect()->route('home')->with('success', 'Delete event with success');
     }
 }
