@@ -1,4 +1,4 @@
-
+{{-- @dd($categories) --}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,11 +27,12 @@
 				<div class="container">
 					<h3><i>EVENTO</i></h3>
 					<p>Expolore Events from all over the word </p>
-					<form>
+					<form method="POST" action="">
+						@csrf
 						<div class="row g-0 custom-search-input-2 w-auto">
 							<div class="col-lg-4">
 								<div class="form-group">
-									<input class="form-control" type="text" placeholder="Hotel, City...">
+									<input class="form-control" type="text" placeholder="Event">
 									<i class="icon_pin_alt"></i>
 								</div>
 							</div>
@@ -44,7 +45,9 @@
 							<div class="col-lg-3">
 								<div class="text-center">
 									<select class="w-100" id="guestsSelect" name="guestsSelect">
-										<option value="">aaaaaaaaaaaaaaaaaaa</option>
+										@foreach($categories as $cat)
+										<option value="{{$cat->id}}">{{$cat->name}}</option>
+										@endforeach
 										<!-- Add more options as needed -->
 									</select>
 								</div>
@@ -66,25 +69,36 @@
 				<h2>Our New Events</h2>
 			</div>
 			<div id="reccomended" class="owl-carousel owl-theme" data-cue="zoomIn">
+				@foreach($events as $event) 
 				<div class="item">
 					<div class="box_grid">
 						<figure>
 							<a href="#0" class="wish_bt"></a>
-							<a href="tour-detail.html"><img src="img/tour_1.jpg" class="img-fluid" alt="" width="800" height="533"><div class="read_more"><span>Read more</span></div></a>
-							<small>Historic</small>
+							<a href="{{route('detail_index', $event->id)}}"><img src="upload/events/imgs/{{$event->image}}" class="img-fluid" alt="" width="800" height="533"><div class="read_more"><span>Read more</span></div></a>
+							<small>{{$event->Category->name}}</small>
 						</figure>
 						<div class="wrapper">
-							<h3><a href="tour-detail.html">Arc Triomphe</a></h3>
-							<p>Id placerat tacimates definitionem sea, prima quidam vim no. Duo nobis persecuti cu.</p>
-							<span class="price">From <strong>$54</strong> /per person</span>
+							<h3><a href="{{route('detail_index', $event->id)}}">{{$event->title}}</a></h3>
+							<p>{{$event->description}}</p>
+							<span class="price">Only <strong>{{$event->num_places}}</strong> place left</span>
 						</div>
 						<ul>
-							<li><i class="icon_clock_alt"></i> 1h 30min</li>
-							<li><div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div></li>
+							@php
+								$eventTime = strtotime($event->date);
+	 							$difference = $eventTime - time();
+								$hoursDifference = round($difference / 3600);
+							@endphp
+							<li><i class="icon_clock_alt mb-2"></i> 
+							@if ($hoursDifference < 24) 
+								{{ date('H:i', $eventTime) }}
+							@else 
+								{{ date('Y-m-d', $eventTime) }}
+							@endif</li>
 						</ul>
 					</div>
 				</div>
 				<!-- /item -->
+				@endforeach
 			</div>
 			<!-- /carousel -->
 			<p class="btn_home_align"><a href="tours-grid-isotope.html" class="btn_1 rounded">View all Tours</a></p>

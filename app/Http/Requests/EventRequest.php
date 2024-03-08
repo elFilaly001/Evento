@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class EventRequest extends FormRequest
 {
@@ -21,12 +22,13 @@ class EventRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd(Str::length($_REQUEST['description']));
         return [
-            "image" => "required",
-            'title' => 'required|min:3',
-            'description' => 'required|max:500',
+            "image" => "required|image",
+            'title' => 'required|max:50',
+            'description' => 'required|max:10000',
             'location' => 'required',
-            'num_place' => 'numeric',
+            'num_places' => 'numeric',
             'category_id' => 'required',
             'date' => 'required|date',
         ];

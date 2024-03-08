@@ -2914,11 +2914,11 @@ ul.cart_details li span {
 .box_list ul li .score {
     margin-top: -10px;
 }
-.box_grid ul li:last-child,
+/* .box_grid ul li:last-child,
 .box_list ul li:last-child {
     margin-right: 0;
     float: right;
-}
+} */
 .rating {
     color: #ccc;
 }
@@ -6233,6 +6233,7 @@ ul.share-buttons li i {
     z-index: 9;
     height: 18vh;
     overflow: auto;
+    width: 100%;
 }
 .nice-select .list:hover .option:not(:hover) {
     background-color: transparent !important;
@@ -6266,8 +6267,8 @@ ul.share-buttons li i {
     min-height: 38px;
     outline: 0;
     padding-left: 15px;
-    padding-right: 26px;
-    text-align: left;
+    padding-right: 20px;
+    text-align: start;
     transition: 0.2s;
 }
 #cookie-bar,

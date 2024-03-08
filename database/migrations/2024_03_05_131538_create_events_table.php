@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->string('description', 1000);
             $table->string('location');
             $table->dateTime('date');
             $table->integer('num_places');
@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->enum('validation', ['automatic', 'Manuel'])->default('automatic');
             $table->enum('status', ['approved', 'rejected', 'pending'])->default('pending');
+            $table->integer('num_reservation')->default(0);
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

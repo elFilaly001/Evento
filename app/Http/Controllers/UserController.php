@@ -25,7 +25,6 @@ class UserController extends Controller
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->first();
-
         if ($user && Hash::check($request->password, $user->password)) {
             $request->session()->put('user_id', $user->id);
             $request->session()->put('user_name', $user->name);
@@ -42,6 +41,7 @@ class UserController extends Controller
      */
     public function register(RegisterRequest $request)
     {
+        // dd($request->all());
         $inp = $request->all();
         $user = User::create($inp);
         $request->session()->put('user_name', $user->name);

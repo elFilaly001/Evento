@@ -56,7 +56,7 @@
 					</label>
 				  </div>
 				  <div class="form-check">
-					<input class="form-check-input" type="radio" name="role" id="flexRadioDefault2" value="Organizer" >
+					<input class="form-check-input" type="radio" name="role" id="flexRadioDefault2" value="Orgnizer" >
 					<label class="form-check-label" for="flexRadioDefault2">
 					  Organisateur
 					</label>

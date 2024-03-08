@@ -119,11 +119,12 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
+                @if(session("user_role") == "Orgnizer")
                 <div class="container-fluid">   
 
                     <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Add Event
-                      </button>
+                    </button>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -183,10 +184,132 @@
                         </div>
                     </div>
 
+                    @foreach($PendingEvents as $PE)
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">{{$PE->title}}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>id</th>
+                                            <th>User name</th>
+                                            <th>Action</th>   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($reservation as $reserv)
+                                            @if($PE->id == $reserv->event_id)
+                                            <tr>
+                                                <th>{{$reserv->id}}</th>
+                                                <th>{{$reserv->user->name}}</th>
+                                                <th class="d-flex gap-2 pb-4">
+                                                    <form action="{{route("reserve_approve")}}" method="post">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" value="{{$reserv->id}}" name="id">
+                                                        <button type="submit" class="btn btn-primary">Approve</a>
+                                                    </form>
+                                                    <form action="{{route("reserve_reject")}}" method="post">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" value="{{$reserv->id}}" name="id">
+                                                        <button type="submit" class="btn btn-danger">Reject</a>
+                                                    </form>
+                                                </th>
+                                            </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>id</th>
+                                            <th>User name</th>
+                                            <th>Action</th>   
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+                @endif
+                    <!-- Button trigger modal -->
+                @if(session("user_role") == "Admin")
+                <div class="container-fluid">   
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Title</th>
+                                            <th>Desctiption</th>
+                                            <th>Category</th>
+                                            <th>Date</th>
+                                            <th>validation</th>
+                                            <th>status</th>
+                                            <th>Action</th>   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($events as $event)
+                                        <tr>
+                                            <th><img src="upload/events/imgs/{{$event->image}}" alt="" style="width: 50px;border-radius: 50%;height:50px"></th>
+                                            <th>{{$event->title}}</th>
+                                            <th>{{$event->description}}</th>
+                                            <th>{{$event->category->name}}</th>
+                                            <th>{{$event->date}}</th>
+                                            <th>{{$event->validation}}</th>
+                                            <th>{{$event->status}}</th>
+                                            <th class="d-flex gap-2 pb-4">
+                                                <form action="{{route("Approve_Event")}}" method="post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" value="{{$event->id}}" name="id">
+                                                    <button type="submit" class="btn btn-primary">Approve</a>
+                                                </form>
+                                                <form action="{{route("Reject_Event")}}" method="post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" value="{{$event->id}}" name="id">
+                                                    <button type="submit" class="btn btn-danger">Reject</a>
+                                                </form>
+                                            </th>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Title</th>
+                                            <th>Desctiption</th>
+                                            <th>Category</th>
+                                            <th>Date</th>
+                                            <th>validation</th>
+                                            <th>status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     <!-- Button trigger modal -->
 
   
   <!-- Modal -->
+  @if(session("user_role") == "Orgnizer")
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -241,7 +364,7 @@
                         <input class="form-check-input" type="radio" name="validation" id="flexRadioDefault2" value="automatic" checked>
                         <label class="form-check-label" for="flexRadioDefault2">
                             Automatique
-                        </label>
+                       </label>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -250,9 +373,8 @@
       </div>
     </div>
   </div>
-                </div>
-                <!-- /.container-fluid -->
-
+</div>               <!-- /.container-fluid -->
+@endif
                 
 
             </div>

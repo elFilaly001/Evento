@@ -21,9 +21,7 @@
         <i class="fas fa-fw fa-cog"></i>
         <span>Statistic</span>
     </a>
-    
     <!-- Divider -->
-    
     <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
 </li>

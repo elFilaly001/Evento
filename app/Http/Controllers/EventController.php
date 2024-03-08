@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventRequest;
 use App\Models\Category;
 use App\Models\Event;
+use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -14,14 +16,32 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::where("user_id", "=", session('user_id'))->orderBy("created_at", "desc")->paginate(10);
-        $categories = Category::orderBy("created_at", "desc")->paginate(10);
-        return view("Back-office.tables", compact(["events", "categories"]));
+        // dd(session("user_role"));
+        if (session("user_role") == null) {
+            return redirect()->route("login_index");
+        } elseif (session("user_role") == "Admin") {
+            $events = Event::orderBy("created_at", "desc")->paginate(10);
+            return view("Back-office.tables", compact(["events"]));
+        } elseif (session("user_role") == "Orgnizer") {
+            $events = Event::where("user_id", "=", session('user_id'))->orderBy("created_at", "desc")->paginate(10);
+            $PendingEvents = Event::where("user_id", "=", session('user_id'))
+                ->where("validation", "=", "Manuel")
+                ->where("status", "=", "Approved")
+                ->orderBy("created_at", "asc")->get();
+            $reservation = Reservation::where("status", "=", "Pending")->get();
+            $categories = Category::orderBy("created_at", "desc")->paginate(10);
+            return view("Back-office.tables", compact(["events", "categories", "PendingEvents", "reservation"]));
+        } else {
+            return redirect()->route("login_index");
+        }
     }
 
-    public function Home_index()
+
+
+    public function detail_index(Event $event)
     {
-        return view("Front-Office.index");
+        $events = Event::where("id", "=", $event->id)->first();
+        return view("Front-Office.detail-detail", compact("events"));
     }
     /**
      * Show the form for creating a new resource.
@@ -31,21 +51,38 @@ class EventController extends Controller
         //
     }
 
+    public function Approve(Request $request)
+    {
+        $data = $request->id;
+        $event = Event::where("id", "=",  $data)->first();
+        $event["status"] =  "Approved";
+        $event->update();
+        // dd($event["status"]);
+        return redirect()->route("Admin_index")->with("success", "success");
+    }
+
+    public function Reject(Request $request)
+    {
+        $data = $request->id;
+        $event = Event::where("id", "=",  $data)->first();
+        $event["status"] =  "Rejected";
+        $event->update();
+        // dd($event["status"]);
+        return redirect()->route("Admin_index")->with("success", "success");
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(EventRequest $request)
     {
+        // dd($request->all())
         $inputs = $request->all();
         if ($request->hasFile("image")) {
             $file = $request->file("image");
             $filename = time() . "." . $file->getClientOriginalExtension();
             $inputs['image'] = $filename;
-            if ($inputs['validation'] == 'automatic') {
-                $inputs['status'] = 'approved';
-            } elseif ($inputs['validation'] == 'Manuel') {
-                $inputs['status'] = 'pending';
-            }
+            $inputs['status'] = 'pending';
             $inputs['user_id'] = session("user_id");
             Event::create($inputs);
             $file->move(public_path("/upload/events/imgs"), $filename);
@@ -74,7 +111,7 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EventRequest $request, Event $event)
+    public function update(Request $request, Event $event)
     {
         // dd($request);
         if ($request->hasFile('image')) {
@@ -87,6 +124,8 @@ class EventController extends Controller
             $event->date = $request->date;
             $event->location = $request->location;
             $event->category_id = $request->category;
+            $event->num_places = $request->num_places;
+            $event->validation = $request->validation;
             $event->update();
             $file->move(public_path("/upload/events/imgs"), $filename);
             return redirect()->route("Admin_index", $event->id)->with("success", "updated succesfully");
@@ -97,6 +136,9 @@ class EventController extends Controller
             $event->date = $request->date;
             $event->location = $request->location;
             $event->category_id = $request->category;
+            $event->num_places = $request->num_places;
+            $event->validation = $request->validation;
+            // dd($event);
             $event->update();
             return redirect()->route("Admin_index", $event->id)->with("success", "updated succesfully");
         }
