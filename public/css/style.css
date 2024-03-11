@@ -2983,7 +2983,7 @@ ul.cart_details li span {
     -webkit-transition: 0.3s ease-in-out;
     -ms-transition: 0.3s ease-in-out;
     transition: 0.3s ease-in-out;
-    height: 360px;
+    /* height: 360px; */
     width: auto;
     max-width: none;
 }

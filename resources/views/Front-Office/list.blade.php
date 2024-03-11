@@ -1,3 +1,4 @@
+{{-- @dd($events) --}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,38 +24,43 @@
 		<section class="hero_in restaurants">
 			<div class="wrapper">
 				<div class="container">
-					<h1 class="fadeInUp"><span></span>Paris Eat &amp; Drink list</h1>
+					<p>EVENTS</p>
+					<form id="searchForm" action="{{route("search")}}" method="POST">
+						@csrf
+						<div class="row g-0 custom-search-input-2 w-auto">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<input class="form-control" type="text" id="title" name="event" placeholder="Event">
+									<i class="icon_pin_alt"></i>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<input class="form-control" type="text" id="dates" name="dates" placeholder="When..">
+									<i class="icon_calendar"></i>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="text-center">
+									<select class="w-100" id="category"  name="category">
+										<option value="">categories</option>
+										@foreach($categories as $cat)
+										<option value="{{$cat->id}}">{{$cat->name}}</option>
+										@endforeach
+										<!-- Add more options as needed -->
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<input type="submit" class="btn_search" value="Search">
+							</div>
+						</div>
+						<!-- /row -->
+					</form>
 				</div>
 			</div>
 		</section>
 		<!--/hero_in-->
-		
-		<div class="filters_listing sticky_horizontal">
-			<div class="container">
-				<ul class="clearfix">
-					<li>
-						<div class="switch-field">
-							<input type="radio" id="all" name="listing_filter" value="all" checked>
-							<label for="all">All</label>
-							<input type="radio" id="popular" name="listing_filter" value="popular">
-							<label for="popular">Popular</label>
-							<input type="radio" id="latest" name="listing_filter" value="latest">
-							<label for="latest">Latest</label>
-						</div>
-					</li>
-					<li>
-						<div class="layout_view">
-							<a href="restaurants-grid-isotope.html"><i class="icon-th"></i></a>
-							<a href="#0" class="active"><i class="icon-th-list"></i></a>
-						</div>
-					</li>
-					<li>
-						<a class="btn_map" data-bs-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="View on map">View on map</a>
-					</li>
-				</ul>
-			</div>
-			<!-- /container -->
-		</div>
 		<!-- /filters -->
 		
 		<div class="collapse" id="collapseMap">
@@ -62,126 +68,30 @@
 		</div>
 		<!-- End Map -->
 
+
+		@foreach ($events as $event)	
 		<div class="container margin_60_35">
 			<div class="box_list" data-cue="slideInUp">
-				<div class="row g-0">
+				<div class="row g-0 mb-3">
 					<div class="col-lg-5">
 						<figure>
-							<small>Paris Centre</small>
-							<a href="restaurant-detail.html"><img src="img/restaurant_1.jpg" class="img-fluid" alt="" width="800" height="533"><div class="read_more"><span>Read more</span></div></a>
+							<small>{{$event->category->name}}</small>
+							<a href="{{route('detail_index', $event->id)}}"><img src="upload/events/imgs/{{$event->image}}" class="img-fluid" alt=""><div class="read_more"><span>Read more</span></div></a>
 						</figure>
 					</div>
 					<div class="col-lg-7">
 						<div class="wrapper">
 							<a href="#0" class="wish_bt"></a>
-							<h3><a href="restaurant-detail.html">King food</a></h3>
-							<p>Dicam diceret ut ius, no epicuri dissentiet philosophia vix. Id usu zril tacimates neglegentur. Eam id legimus torquatos cotidieque, usu decore percipitur definitiones ex, nihil utinam recusabo mel no.</p>
-							<span class="price">From <strong>$54</strong> /per person</span>
+							<h3><a href="{{route('detail_index', $event->id)}}">{{$event->title}}</a></h3>
+							<p>{{$event->description}}</p>
+							<h6>{{$event->location}}</h6>
+							<span class="price">Only <strong>{{($event->num_places)-($event->num_reservation)	}}</strong>seat left</span>
 						</div>
-						<ul>
-							<li><i class="ti-eye"></i> 164 views</li>
-							<li><div class="score"><span>Superb<em>350 Reviews</em></span><strong>8.9</strong></div></li>
-						</ul>
 					</div>
 				</div>
 			</div>
-			<!-- /box_list -->
-			<div class="box_list" data-cue="slideInUp">
-				<div class="row g-0">
-					<div class="col-lg-5">
-						<figure>
-							<small>Paris Centre</small>
-							<a href="restaurant-detail.html"><img src="img/restaurant_2.jpg" class="img-fluid" alt="" width="800" height="533"><div class="read_more"><span>Read more</span></div></a>
-						</figure>
-					</div>
-					<div class="col-lg-7">
-						<div class="wrapper">
-							<a href="#0" class="wish_bt"></a>
-							<h3><a href="restaurant-detail.html">Catrine</a></h3>
-							<p>Dicam diceret ut ius, no epicuri dissentiet philosophia vix. Id usu zril tacimates neglegentur. Eam id legimus torquatos cotidieque, usu decore percipitur definitiones ex, nihil utinam recusabo mel no.</p>
-							<span class="price">From <strong>$124</strong> /per person</span>
-						</div>
-						<ul>
-							<li><i class="ti-eye"></i> 164 views</li>
-							<li><div class="score"><span>Good<em>350 Reviews</em></span><strong>7.0</strong></div></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /box_list -->
-			<div class="box_list" data-cue="slideInUp">
-				<div class="row g-0">
-					<div class="col-lg-5">
-						<figure>
-							<small>Paris Centre</small>
-							<a href="restaurant-detail.html"><img src="img/restaurant_3.jpg" class="img-fluid" alt="" width="800" height="533"><div class="read_more"><span>Read more</span></div></a>
-						</figure>
-					</div>
-					<div class="col-lg-7">
-						<div class="wrapper">
-							<a href="#0" class="wish_bt"></a>
-							<h3><a href="restaurant-detail.html">Bella Napoli</a></h3>
-							<p>Dicam diceret ut ius, no epicuri dissentiet philosophia vix. Id usu zril tacimates neglegentur. Eam id legimus torquatos cotidieque, usu decore percipitur definitiones ex, nihil utinam recusabo mel no.</p>
-							<span class="price">From <strong>$45</strong> /per person</span>
-						</div>
-						<ul>
-							<li><i class="ti-eye"></i> 164 views</li>
-							<li><div class="score"><span>Good<em>350 Reviews</em></span><strong>7.0</strong></div></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /box_list -->
-			<div class="box_list" data-cue="slideInUp">
-				<div class="row g-0">
-					<div class="col-lg-5">
-						<figure>
-							<small>Paris Centre</small>
-							<a href="restaurant-detail.html"><img src="img/restaurant_4.jpg" class="img-fluid" alt="" width="800" height="533"><div class="read_more"><span>Read more</span></div></a>
-						</figure>
-					</div>
-					<div class="col-lg-7">
-						<div class="wrapper">
-							<a href="#0" class="wish_bt"></a>
-							<h3><a href="restaurant-detail.html">Slow Food</a></h3>
-							<p>Dicam diceret ut ius, no epicuri dissentiet philosophia vix. Id usu zril tacimates neglegentur. Eam id legimus torquatos cotidieque, usu decore percipitur definitiones ex, nihil utinam recusabo mel no.</p>
-							<span class="price">From <strong>$25</strong> /per person</span>
-						</div>
-						<ul>
-							<li><i class="ti-eye"></i> 164 views</li>
-							<li><div class="score"><span>Superb<em>350 Reviews</em></span><strong>9.0</strong></div></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /box_list -->
-			<div class="box_list" data-cue="slideInUp">
-				<div class="row g-0">
-					<div class="col-lg-5">
-						<figure>
-							<small>Paris Centre</small>
-							<a href="restaurant-detail.html"><img src="img/restaurant_5.jpg" class="img-fluid" alt="" width="800" height="533"><div class="read_more"><span>Read more</span></div></a>
-						</figure>
-					</div>
-					<div class="col-lg-7">
-						<div class="wrapper">
-							<a href="#0" class="wish_bt"></a>
-							<h3><a href="restaurant-detail.html">Andrew Fish</a></h3>
-							<p>Dicam diceret ut ius, no epicuri dissentiet philosophia vix. Id usu zril tacimates neglegentur. Eam id legimus torquatos cotidieque, usu decore percipitur definitiones ex, nihil utinam recusabo mel no.</p>
-							<span class="price">From <strong>$65</strong> /per person</span>
-						</div>
-						<ul>
-							<li><i class="ti-eye"></i> 164 views</li>
-							<li><div class="score"><span>Superb<em>350 Reviews</em></span><strong>9.0</strong></div></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /box_list -->
-			
-			<p class="text-center add_top_30"><a href="#0" class="btn_1 rounded">Load more</a></p>
-		
 		</div>
+		@endforeach
 		<!-- /container -->
 		<div class="bg_color_1">
 			<div class="container margin_60_35">
@@ -291,7 +201,6 @@
 					<ul id="additional_links">
 						<li><a href="#0">Terms and conditions</a></li>
 						<li><a href="#0">Privacy</a></li>
-						<li><span>© Panagea</span></li>
 					</ul>
 				</div>
 			</div>
@@ -353,6 +262,65 @@
 	
 	@include('Componants.scripts')
   
+	<!-- Add this script block in your HTML file -->
+<script>
+	$(function() {
+	  'use strict';
+	  $('input[name="dates"]').daterangepicker({
+		  autoUpdateInput: false,
+		  minDate:new Date(),
+		  locale: {
+			  cancelLabel: 'Clear'
+		  }
+	  });
+	  $('input[name="dates"]').on('apply.daterangepicker', function(ev, picker) {
+		  $(this).val(picker.startDate.format('YYYY-MM-DD') + ' > ' + picker.endDate.format('YYYY-MM-DD'));
+	  });
+	  $('input[name="dates"]').on('cancel.daterangepicker', function(ev, picker) {
+		  $(this).val('');
+	  });
+	});
+	
+    // async function searchEvents() {
+    //     const event = document.getElementById('title').value;
+    //     const category = document.getElementById('category').value;
+    //     const dates = document.getElementById('dates').value;
+	// 	// console.log(event, category , dates);
+    //     try {
+    //         const response = await fetch("", {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    //             },
+    //             body: JSON.stringify({ event, category, dates })
+	// 			console.log(body);
+    //         });
+			
+	// 		console.log(response);
+    //         if (!response.ok) {
+	// 			throw new Error('Error fetching events: ' + response.statusText);
+    //         }
+
+    //         const data = await response.json();
+
+    //         const eventsList = document.getElementById('eventsList');
+    //         eventsList.innerHTML = '';
+    //         data.forEach(event => {
+    //             const eventItem = document.createElement('li');
+    //             eventItem.textContent = event.title || ''; // Assuming 'title' property in event object
+    //             eventsList.appendChild(eventItem);
+    //         });
+    //     } catch (error) {
+    //         console.error(error.message);
+    //     }
+    // }
+
+    // document.getElementById('searchForm').addEventListener('submit', (event) => {
+    //     event.preventDefault();
+    //     searchEvents();
+    // });
+</script>
 </body>
 
 <!-- Mirrored from www.ansonika.com/panagea/restaurants-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 04 Mar 2024 08:53:03 GMT -->

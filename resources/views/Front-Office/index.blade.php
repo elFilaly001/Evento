@@ -27,12 +27,12 @@
 				<div class="container">
 					<h3><i>EVENTO</i></h3>
 					<p>Expolore Events from all over the word </p>
-					<form method="POST" action="">
+					<form method="POST" action="{{route("search")}}">
 						@csrf
 						<div class="row g-0 custom-search-input-2 w-auto">
 							<div class="col-lg-4">
 								<div class="form-group">
-									<input class="form-control" type="text" placeholder="Event">
+									<input class="form-control" type="text" name="event" placeholder="Event">
 									<i class="icon_pin_alt"></i>
 								</div>
 							</div>
@@ -44,7 +44,8 @@
 							</div>
 							<div class="col-lg-3">
 								<div class="text-center">
-									<select class="w-100" id="guestsSelect" name="guestsSelect">
+									<select class="w-100" id="guestsSelect" name="category">
+										<option value="">Ctegories</option>
 										@foreach($categories as $cat)
 										<option value="{{$cat->id}}">{{$cat->name}}</option>
 										@endforeach
@@ -80,7 +81,7 @@
 						<div class="wrapper">
 							<h3><a href="{{route('detail_index', $event->id)}}">{{$event->title}}</a></h3>
 							<p>{{$event->description}}</p>
-							<span class="price">Only <strong>{{$event->num_places}}</strong> place left</span>
+							<span class="price">Only <strong>{{($event->num_places)-($event->num_reservation)}}</strong> place left</span>
 						</div>
 						<ul>
 							@php
@@ -388,7 +389,7 @@
 		  }
 	  });
 	  $('input[name="dates"]').on('apply.daterangepicker', function(ev, picker) {
-		  $(this).val(picker.startDate.format('MM-DD-YY') + ' > ' + picker.endDate.format('MM-DD-YY'));
+		  $(this).val(picker.startDate.format('YYYY-MM-DD') + ' > ' + picker.endDate.format('YYYY-MM-DD'));
 	  });
 	  $('input[name="dates"]').on('cancel.daterangepicker', function(ev, picker) {
 		  $(this).val('');

@@ -18,10 +18,19 @@
     </a>
     <nav id="menu" class="main-menu">
         <ul>
-            <li><span><a href="#0">Home</a></span>
+            <li><span><a href="/">Home</a></span>
             </li>
-            <li><span><a href="#0">Events</a></span>
+            <li><span><a href="/list">Events</a></span>
             </li>
+            @if(session('user_role') == "Orgnizer" || session('user_role') == "Admin" )
+            <li><span><a href="/dashboard">Dashbeard</a></span>
+            </li>
+            @endif
+            @if(session("user"))
+                <li><span><a href="/tickets">My tickets</a></span>
+            @endif
+            </li>
+
         </ul>
     </nav>
 </header>

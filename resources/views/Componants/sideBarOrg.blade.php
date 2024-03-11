@@ -3,11 +3,11 @@
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
         <div class="sidebar-brand-text mx-3"> 
-        {{-- @if (session('user_role') == "Admin")
+        @if (session('user_role') == "Admin")
             Admin
         @else
             Organisateur
-        @endif     --}}
+        @endif    
         </div>
     </a>
 
@@ -16,7 +16,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+        <a class="nav-link collapsed" href="{{route("stats")}}" data-toggle="collapse" data-target="#collapseTwo"
         aria-expanded="true" aria-controls="collapseTwo">
         <i class="fas fa-fw fa-cog"></i>
         <span>Statistic</span>
@@ -25,14 +25,14 @@
     <hr class="sidebar-divider">
     <!-- Nav Item - Pages Collapse Menu -->
 </li>
+
 <li class="nav-item">
     <a class="nav-link" href="{{ route('Admin_index') }}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Events</span></a>
 </li>
-{{-- 
-@if (session('user_role') == "Admin") --}}
-    
+
+@if (session('user_role') == "Admin")
 <!-- Nav Item - Utilities Collapse Menu -->
 <li class="nav-item">
     <a class="nav-link collapsed" href="{{route('Category_index')}}">
@@ -40,16 +40,14 @@
         <span>Categories</span>
     </a>
 </li>
-
-
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" >
+        <a class="nav-link collapsed" href="{{route('UserAdmin')}}" >
             <i class="fas fa-fw fa-folder"></i>
             <span>Users</span>
         </a>
     </li>
-    {{-- @endif --}}
+@endif
 
 </ul>
 <!-- End of Sidebar -->

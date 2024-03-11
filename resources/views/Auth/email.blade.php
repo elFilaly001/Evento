@@ -40,21 +40,7 @@
 					<input type="email" class="form-control" name="email" id="email" placeholder="Email">
 					<i class="icon_mail_alt"></i>
 				</div>
-				<div class="form-group">
-					<label>Password</label>
-					<input type="password" class="form-control" name="password" id="password" value="" placeholder="Password">
-					<i class="icon_lock_alt"></i>
-				</div>
-				<div class="clearfix add_bottom_30">
-					<div class="checkboxes float-start">
-						<label class="container_check">Remember me
-						  <input type="checkbox">
-						  <span class="checkmark"></span>
-						</label>
-					</div>
-					<div class="float-end mt-1"><a id="forgot" href="{{route('forget_password')}}">Forgot Password?</a></div>
-				</div>
-				<button type="submit" class="btn_1 rounded full-width">Login</button>
+				<button type="submit" class="btn_1 rounded full-width">send email</button>
 				<div class="text-center add_top_10">New to Evento? <strong><a href="{{route('register_index')}}">Sign up!</a></strong></div>
 			</form>
 		</aside>

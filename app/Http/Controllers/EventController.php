@@ -16,7 +16,6 @@ class EventController extends Controller
      */
     public function index()
     {
-        // dd(session("user_role"));
         if (session("user_role") == null) {
             return redirect()->route("login_index");
         } elseif (session("user_role") == "Admin") {
@@ -76,6 +75,10 @@ class EventController extends Controller
      */
     public function store(EventRequest $request)
     {
+        // $submittedDateTime = $request->input('date');
+        // $carbonDateTime = Carbon::parse($submittedDateTime);
+        // $formattedDateTime = $carbonDateTime->format('d-m-Y H:i:s');
+
         // dd($request->all())
         $inputs = $request->all();
         if ($request->hasFile("image")) {
@@ -84,6 +87,8 @@ class EventController extends Controller
             $inputs['image'] = $filename;
             $inputs['status'] = 'pending';
             $inputs['user_id'] = session("user_id");
+            // $inputs["date"] = $formattedDateTime;
+            // dd($inputs);
             Event::create($inputs);
             $file->move(public_path("/upload/events/imgs"), $filename);
             return redirect()->route('Admin_index')->with('success', 'Uploaded successfully');

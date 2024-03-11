@@ -347,7 +347,7 @@
                   </div>
                   <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">date</label>
-                    <input type="datetime-local" class="form-control" id="exampleInputPassword1" name="date">
+                    <input type="datetime-local"  class="form-control" id="exampleInputPassword1" name="date">
                   </div>
                 <div class="mb-3">
                   <label for="exampleInputPassword1" class="form-label">Places</label>
